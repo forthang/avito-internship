@@ -1,0 +1,16 @@
+services:
+  server:
+    build: ./frontend/server
+    ports:
+      - '8080:8080'
+    environment:
+      - port=8080
+    restart: unless-stopped
+
+  client:
+    build: ./frontend/client
+    ports:
+      - '3000:80'
+    depends_on:
+      - server
+    restart: unless-stopped
