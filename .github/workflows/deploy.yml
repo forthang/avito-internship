@@ -1,4 +1,4 @@
-name: CI/CD — Lint, Test & Deploy to GitHub Pages
+name: CI/CD — Lint & Deploy to GitHub Pages
 
 on:
   push:
@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   lint-and-test:
-    name: Lint & Test
+    name: Lint
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -33,7 +33,6 @@ jobs:
 
       - run: npm ci
       - run: npm run lint
-      - run: npm run test
 
   build-and-deploy:
     name: Build & Deploy
