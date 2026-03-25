@@ -27,7 +27,7 @@
 | HTTP | Axios | Интерцепторы, типизация |
 | Роутинг | react-router-dom v6 | По требованию задания |
 | Формы | react-hook-form + MUI | Лёгкая интеграция, dirty tracking |
-| AI | xAI API (Grok) | OpenAI-совместимый API |
+| AI | Groq API (Llama 3.3) | Бесплатный OpenAI-совместимый API |
 | Тесты | Jest + RTL | Стандарт для Webpack-проектов |
 | Линтер | ESLint 9 + Prettier | По требованию задания |
 
@@ -66,13 +66,18 @@ docker compose --profile dev up --build
 
 ## Настройка AI
 
-1. Получите API-ключ на https://console.x.ai
+По умолчанию используется **Groq API** (бесплатный, OpenAI-совместимый).
+
+1. Получите бесплатный API-ключ на https://console.groq.com
 2. Добавьте в `.env`:
 ```
-REACT_APP_XAI_API_KEY=ваш_ключ
+REACT_APP_AI_PROVIDER=groq
+REACT_APP_AI_API_KEY=ваш_ключ
 ```
 
-Используется модель `grok-3-mini-fast`.
+Используется модель `llama-3.3-70b-versatile`.
+
+Для деплоя на GitHub Pages ключ добавляется как секрет `REACT_APP_AI_API_KEY` в Settings → Secrets → Actions.
 
 ---
 
@@ -135,10 +140,19 @@ src/
 
 ---
 
-## Известные ограничения сервера
+## Известные ограничения
+
+### GitHub Pages (Live Demo)
+
+Live Demo на GitHub Pages — это **только клиентская часть** (статика). Бэкенд-сервер не развёрнут, поэтому:
+- Запросы к API (`/items`) не работают — данные не загрузятся
+- Для полноценной работы приложения **необходим локальный запуск** сервера (см. раздел "Быстрый старт")
+- AI-функции (генерация описания, оценка цены, чат) работают на GH Pages, т.к. обращаются напрямую к Groq API
+
+### Сервер
 
 1. **GET /items не возвращает id** — на странице списка используется index элемента для навигации к детальной странице
-2. **CORS для PUT** — в dev-режиме решается через webpack-dev-server proxy; в Docker — через nginx proxy
+2. **CORS для PUT** — в dev-режиме решается через webpack-dev-server proxy; в Docker — через nginx proxy. На GH Pages PUT невозможен (нет сервера)
 3. **Порт сервера** — `Number(process.env.port) ?? 8080` вычисляется как NaN при отсутствии переменной (NaN вместо undefined), Fastify использует дефолт
 
 ---
