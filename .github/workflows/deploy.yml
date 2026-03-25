@@ -60,7 +60,8 @@ jobs:
         run: npm run build
         env:
           PUBLIC_URL: /avito-internship/
-          REACT_APP_XAI_API_KEY: ${{ secrets.REACT_APP_XAI_API_KEY }}
+          REACT_APP_AI_API_KEY: ${{ secrets.REACT_APP_AI_API_KEY }}
+          REACT_APP_AI_PROVIDER: groq
 
       - uses: actions/configure-pages@v5
 
