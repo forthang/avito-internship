@@ -94,6 +94,8 @@ export function AdEditForm({
               multiline
               minRows={4}
               inputProps={{ maxLength: DESCRIPTION_MAX }}
+              InputLabelProps={{ shrink: true }}
+              placeholder="Введите описание объявления..."
               {...register('description')}
             />
             <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block', textAlign: 'right' }}>
