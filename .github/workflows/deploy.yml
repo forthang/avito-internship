@@ -60,6 +60,7 @@ jobs:
         run: npm run build
         env:
           PUBLIC_URL: /avito-internship/
+          REACT_APP_XAI_API_KEY: ${{ secrets.REACT_APP_XAI_API_KEY }}
 
       - uses: actions/configure-pages@v5
 

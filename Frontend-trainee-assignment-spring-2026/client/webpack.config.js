@@ -31,7 +31,7 @@ module.exports = (_env, argv) => {
               transpileOnly: true,
             },
           },
-          exclude: /node_modules/,
+          exclude: [/node_modules/, /\.test\.tsx?$/, /__tests__/],
         },
         {
           test: /\.module\.css$/,
@@ -71,6 +71,9 @@ module.exports = (_env, argv) => {
             semantic: true,
             syntactic: true,
           },
+          configOverwrite: {
+            exclude: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**'],
+          },
         },
       }),
       new DotenvWebpackPlugin({
@@ -79,12 +82,23 @@ module.exports = (_env, argv) => {
     ],
     devServer: {
       port: 3000,
+      host: '0.0.0.0',
       hot: true,
       historyApiFallback: true,
+      allowedHosts: 'all',
+      client: {
+        webSocketURL: 'auto://0.0.0.0:0/ws',
+      },
+      watchFiles: {
+        options: {
+          usePolling: !!process.env.WATCHPACK_POLLING,
+          interval: 500,
+        },
+      },
       proxy: [
         {
           context: ['/items'],
-          target: 'http://localhost:8080',
+          target: process.env.API_PROXY_TARGET || 'http://localhost:8080',
           changeOrigin: true,
         },
       ],
