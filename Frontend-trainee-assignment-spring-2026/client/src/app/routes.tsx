@@ -58,4 +58,6 @@ const routes: RouteObject[] = [
   },
 ];
 
-export const router = createBrowserRouter(routes);
+const basename = process.env.PUBLIC_URL || '/';
+
+export const router = createBrowserRouter(routes, { basename });
