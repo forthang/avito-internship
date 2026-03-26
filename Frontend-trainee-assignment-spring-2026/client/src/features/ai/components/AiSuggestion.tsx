@@ -33,14 +33,16 @@ export function AiSuggestion({
       <Typography variant="subtitle2" sx={{ mb: 1 }}>
         Предложение AI
       </Typography>
-      {currentDescription ? (
-        <DiffView oldText={currentDescription} newText={suggestion} />
-      ) : (
-        <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', mb: 2 }}>
-          {suggestion}
-        </Typography>
-      )}
-      <Button variant="contained" size="small" onClick={onApply} sx={{ mt: 2 }}>
+      <Box sx={{ maxHeight: 200, overflowY: 'auto', mb: 1 }}>
+        {currentDescription ? (
+          <DiffView oldText={currentDescription} newText={suggestion} />
+        ) : (
+          <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+            {suggestion}
+          </Typography>
+        )}
+      </Box>
+      <Button variant="contained" size="small" onClick={onApply}>
         Применить
       </Button>
     </Paper>

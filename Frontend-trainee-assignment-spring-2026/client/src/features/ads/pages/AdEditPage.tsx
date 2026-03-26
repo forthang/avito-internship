@@ -30,6 +30,8 @@ export default function AdEditPage() {
   const draftChecked = useRef(false);
 
   const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('Объявление сохранено');
+  const [snackSeverity, setSnackSeverity] = useState<'success' | 'info'>('success');
   const [draftDialogOpen, setDraftDialogOpen] = useState(false);
   const [draftValues, setDraftValues] = useState<ItemUpdatePayload | null>(null);
   const [currentDescription, setCurrentDescription] = useState('');
@@ -67,10 +69,17 @@ export default function AdEditPage() {
   const handleSubmit = useCallback(
     (data: ItemUpdatePayload) => {
       updateItem.mutate(data, {
-        onSuccess: () => {
+        onSuccess: (result) => {
           clearDraft();
+          if (result.local) {
+            setSnackMessage('Сохранено локально (сервер недоступен для PUT)');
+            setSnackSeverity('info');
+          } else {
+            setSnackMessage('Объявление сохранено');
+            setSnackSeverity('success');
+          }
           setSnackOpen(true);
-          setTimeout(() => navigate(`/ads/${numId}`), 1000);
+          setTimeout(() => navigate(`/ads/${numId}`), 1500);
         },
       });
     },
@@ -160,8 +169,8 @@ export default function AdEditPage() {
         autoHideDuration={3000}
         onClose={() => setSnackOpen(false)}
       >
-        <Alert severity="success" onClose={() => setSnackOpen(false)}>
-          Объявление сохранено
+        <Alert severity={snackSeverity} onClose={() => setSnackOpen(false)}>
+          {snackMessage}
         </Alert>
       </Snackbar>
     </Box>

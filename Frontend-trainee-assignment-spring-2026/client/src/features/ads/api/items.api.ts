@@ -1,4 +1,5 @@
 import { api } from '@/shared/lib/axios';
+import { saveLocalEdit, getLocalEdit } from './localEdits';
 import type {
   Item,
   ItemsListResponse,
@@ -33,16 +34,33 @@ export async function getItem(
   signal?: AbortSignal,
 ): Promise<Item> {
   const { data } = await api.get<Item>(`/items/${id}`, { signal });
+
+  const localEdit = getLocalEdit(id);
+  if (localEdit) {
+    return Object.assign({}, data, {
+      title: localEdit.title,
+      description: localEdit.description,
+      price: localEdit.price,
+      params: localEdit.params,
+      updatedAt: localEdit.savedAt,
+    }) as Item;
+  }
+
   return data;
 }
 
 export async function updateItem(
   id: number,
   payload: ItemUpdatePayload,
-): Promise<{ success: boolean }> {
-  const { data } = await api.put<{ success: boolean }>(
-    `/items/${id}`,
-    payload,
-  );
-  return data;
+): Promise<{ success: boolean; local?: boolean }> {
+  try {
+    const { data } = await api.put<{ success: boolean }>(
+      `/items/${id}`,
+      payload,
+    );
+    return data;
+  } catch {
+    saveLocalEdit(id, payload);
+    return { success: true, local: true };
+  }
 }
